@@ -1,10 +1,21 @@
 # Event Dashboard Demo
 
-## Stack
+Small demo full-stack app using TypeScript + Golang
 
-- Next.js + TypeScript Frontend
-- PostgreSQL backend DB
+## As-deployed
+
+- Next.js + TypeScript Frontend on Vercel
+- Backend handled by Neon Postgres
+- Auth using BetterAuth with admin roles + passkeys implemented
+- Drizzle ORM for frontend, Golang PGX for ingestion
+- Schema representing synthetic logging events
+
+## Available for deployment
+
+- Docker-compose build for all components
+- PostgreSQL backend DB,
 - Golang based buffered ingestion service
+-
 
 ## Setup
 
@@ -94,7 +105,7 @@ cd ingest
 
 ### Ingestion Engine
 
-- [x] Buffered ingestion service in Go
+- [x] Ingestion service in Go
 - [x] HTTP API for event submission
 - [x] Batch database inserts
 - [x] Health check endpoint
