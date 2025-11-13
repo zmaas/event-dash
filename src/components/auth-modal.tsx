@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { IconMail, IconLock, IconUser } from "@tabler/icons-react";
+import {
+	IconMail,
+	IconLock,
+	IconUser,
+	IconFingerprint,
+} from "@tabler/icons-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -84,6 +89,25 @@ export function AuthModal({ trigger }: AuthModalProps) {
 		}
 	};
 
+	const handlePasskeySignIn = async () => {
+		setIsLoading(true);
+		setError(null);
+
+		try {
+			const result = await authClient.signIn.passkey();
+
+			if (result.error) {
+				setError(result.error.message || "Passkey sign in failed");
+			} else {
+				setOpen(false);
+			}
+		} catch (err) {
+			setError("An unexpected error occurred");
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	if (isAuthenticated) {
 		return null;
 	}
@@ -104,40 +128,64 @@ export function AuthModal({ trigger }: AuthModalProps) {
 						<TabsTrigger value="signup">Sign Up</TabsTrigger>
 					</TabsList>
 					<TabsContent value="signin">
-						<form onSubmit={handleSignIn} className="space-y-4">
-							<div className="space-y-2">
-								<Label htmlFor="signin-email">Email</Label>
-								<div className="relative">
-									<IconMail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-									<Input
-										id="signin-email"
-										name="email"
-										type="email"
-										placeholder="Enter your email"
-										className="pl-10"
-										required
-									/>
-								</div>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="signin-password">Password</Label>
-								<div className="relative">
-									<IconLock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-									<Input
-										id="signin-password"
-										name="password"
-										type="password"
-										placeholder="Enter your password"
-										className="pl-10"
-										required
-									/>
-								</div>
-							</div>
-							{error && <div className="text-sm text-destructive">{error}</div>}
-							<Button type="submit" className="w-full" disabled={isLoading}>
-								{isLoading ? "Signing in..." : "Sign In"}
+						<div className="space-y-4">
+							<Button
+								type="button"
+								variant="outline"
+								className="w-full"
+								onClick={handlePasskeySignIn}
+								disabled={isLoading}
+							>
+								<IconFingerprint className="mr-2 h-4 w-4" />
+								{isLoading ? "Signing in..." : "Sign in with Passkey"}
 							</Button>
-						</form>
+							<div className="relative">
+								<div className="absolute inset-0 flex items-center">
+									<span className="w-full border-t" />
+								</div>
+								<div className="relative flex justify-center text-xs uppercase">
+									<span className="bg-background px-2 text-muted-foreground">
+										Or continue with
+									</span>
+								</div>
+							</div>
+							<form onSubmit={handleSignIn} className="space-y-4">
+								<div className="space-y-2">
+									<Label htmlFor="signin-email">Email</Label>
+									<div className="relative">
+										<IconMail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+										<Input
+											id="signin-email"
+											name="email"
+											type="email"
+											placeholder="Enter your email"
+											className="pl-10"
+											required
+										/>
+									</div>
+								</div>
+								<div className="space-y-2">
+									<Label htmlFor="signin-password">Password</Label>
+									<div className="relative">
+										<IconLock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+										<Input
+											id="signin-password"
+											name="password"
+											type="password"
+											placeholder="Enter your password"
+											className="pl-10"
+											required
+										/>
+									</div>
+								</div>
+								{error && (
+									<div className="text-sm text-destructive">{error}</div>
+								)}
+								<Button type="submit" className="w-full" disabled={isLoading}>
+									{isLoading ? "Signing in..." : "Sign In"}
+								</Button>
+							</form>
+						</div>
 					</TabsContent>
 					<TabsContent value="signup">
 						<form onSubmit={handleSignUp} className="space-y-4">
