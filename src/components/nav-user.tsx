@@ -24,6 +24,10 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "~/components/ui/sidebar";
+import { useSession } from "~/components/auth-provider";
+import { Button } from "~/components/ui/button";
+import { AuthModal } from "~/components/auth-modal";
+import { authClient } from "~/server/better-auth/client";
 
 const getInitials = (name: string) => {
 	const names = name.split(" ");
@@ -31,16 +35,29 @@ const getInitials = (name: string) => {
 	return initials;
 };
 
-export function NavUser({
-	user,
-}: {
-	user: {
-		name: string;
-		email: string;
-		avatar: string;
-	};
-}) {
+export function NavUser() {
 	const { isMobile } = useSidebar();
+	const { user, isAuthenticated, isPending } = useSession();
+
+	if (isPending) {
+		return (
+			<SidebarMenu>
+				<SidebarMenuItem>
+					<SidebarMenuButton size="lg" disabled>
+						<div className="h-8 w-8 rounded-lg bg-muted animate-pulse" />
+						<div className="grid flex-1 text-left text-sm leading-tight">
+							<div className="h-4 bg-muted rounded animate-pulse" />
+							<div className="h-3 bg-muted rounded animate-pulse mt-1" />
+						</div>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
+			</SidebarMenu>
+		);
+	}
+
+	if (!isAuthenticated || !user) {
+		return <AuthModal trigger={<AuthTrigger />} />;
+	}
 
 	return (
 		<SidebarMenu>
@@ -51,8 +68,8 @@ export function NavUser({
 							size="lg"
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
-							<Avatar className="h-8 w-8 rounded-lg grayscale">
-								<AvatarImage src={user.avatar} alt={user.name} />
+							<Avatar className="h-8 w-8 rounded-lg">
+								<AvatarImage src={user.image || ""} alt={user.name} />
 								<AvatarFallback className="rounded-lg">
 									{getInitials(user.name)}
 								</AvatarFallback>
@@ -75,7 +92,7 @@ export function NavUser({
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage src={user.avatar} alt={user.name} />
+									<AvatarImage src={user.image || ""} alt={user.name} />
 									<AvatarFallback className="rounded-lg">
 										{getInitials(user.name)}
 									</AvatarFallback>
@@ -89,27 +106,35 @@ export function NavUser({
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<IconUserCircle />
-								Account
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<IconCreditCard />
-								Billing
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<IconNotification />
-								Notifications
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem
+							onClick={async () => {
+								await authClient.signOut();
+							}}
+						>
 							<IconLogout />
 							Log out
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
+			</SidebarMenuItem>
+		</SidebarMenu>
+	);
+}
+
+function AuthTrigger() {
+	return (
+		<SidebarMenu>
+			<SidebarMenuItem>
+				<AuthModal
+					trigger={
+						<SidebarMenuButton
+							size="lg"
+							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
+						>
+							<div className="flex items-center gap-2">Sign In</div>
+						</SidebarMenuButton>
+					}
+				/>
 			</SidebarMenuItem>
 		</SidebarMenu>
 	);

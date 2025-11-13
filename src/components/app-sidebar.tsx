@@ -47,7 +47,7 @@ const data = {
 		},
 		{
 			title: "More Info",
-			url: "https://github.com/zmaas",
+			url: "https://github.com/zmaas/event-dash",
 			icon: IconHelp,
 		},
 	],
@@ -77,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<NavSecondary items={data.navSecondary} className="mt-auto" />
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser user={data.user} />
+				<NavUser />
 			</SidebarFooter>
 		</Sidebar>
 	);
