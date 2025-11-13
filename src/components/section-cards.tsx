@@ -1,5 +1,4 @@
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
-import { useMemo } from "react";
 
 import { Badge } from "~/components/ui/badge";
 import {
@@ -34,77 +33,30 @@ const TrendIndicator = ({ percentage }: { percentage: number }) => {
 	}
 };
 
-const EventsCard = (props: { events: number; change: number }) => {
+const MetricCard = ({
+	title,
+	value,
+	change,
+	footerText,
+}: {
+	title: string;
+	value: number;
+	change: number;
+	footerText: string;
+}) => {
 	return (
 		<Card className="@container/card">
 			<CardHeader>
-				<CardDescription>Events (24hr)</CardDescription>
+				<CardDescription>{title}</CardDescription>
 				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					{props.events}
+					{value}
 				</CardTitle>
 				<CardAction>
-					<TrendIndicator percentage={props.change} />
+					<TrendIndicator percentage={change} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
-				<div className="text-muted-foreground">From X unique users</div>
-			</CardFooter>
-		</Card>
-	);
-};
-
-const ErrorsCard = (props: { errors: number; change: number }) => {
-	return (
-		<Card className="@container/card">
-			<CardHeader>
-				<CardDescription>Errors (24hr)</CardDescription>
-				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					{props.errors}
-				</CardTitle>
-				<CardAction>
-					<TrendIndicator percentage={props.change} />
-				</CardAction>
-			</CardHeader>
-			<CardFooter className="flex-col items-start gap-1.5 text-sm">
-				<div className="text-muted-foreground">From X unique endpoints</div>
-			</CardFooter>
-		</Card>
-	);
-};
-
-const WarningsCard = (props: { warnings: number; change: number }) => {
-	return (
-		<Card className="@container/card">
-			<CardHeader>
-				<CardDescription>Warnings (24hr)</CardDescription>
-				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					{props.warnings}
-				</CardTitle>
-				<CardAction>
-					<TrendIndicator percentage={props.change} />
-				</CardAction>
-			</CardHeader>
-			<CardFooter className="flex-col items-start gap-1.5 text-sm">
-				<div className="text-muted-foreground">From X unique endpoints</div>
-			</CardFooter>
-		</Card>
-	);
-};
-
-const UsersCard = (props: { users: number; change: number }) => {
-	return (
-		<Card className="@container/card">
-			<CardHeader>
-				<CardDescription>Users (24hr)</CardDescription>
-				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					{props.users}
-				</CardTitle>
-				<CardAction>
-					<TrendIndicator percentage={props.change} />
-				</CardAction>
-			</CardHeader>
-			<CardFooter className="flex-col items-start gap-1.5 text-sm">
-				<div className="text-muted-foreground">From X unique endpoints</div>
+				<div className="text-muted-foreground">{footerText}</div>
 			</CardFooter>
 		</Card>
 	);
@@ -115,21 +67,29 @@ export async function SectionCards() {
 	const diffStats = await getEventsLast24HoursWithComparison();
 	return (
 		<div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-			<EventsCard
-				events={eventsStats.totalEvents}
+			<MetricCard
+				title="Events (24hr)"
+				value={eventsStats.totalEvents}
 				change={diffStats.percentChange.totalEvents}
+				footerText=""
 			/>
-			<WarningsCard
-				warnings={eventsStats.warnings}
+			<MetricCard
+				title="Warnings (24hr)"
+				value={eventsStats.warnings}
 				change={diffStats.percentChange.warnings}
+				footerText=""
 			/>
-			<ErrorsCard
-				errors={eventsStats.errors}
+			<MetricCard
+				title="Errors (24hr)"
+				value={eventsStats.errors}
 				change={diffStats.percentChange.errors}
+				footerText=""
 			/>
-			<UsersCard
-				users={eventsStats.uniqueUsers}
+			<MetricCard
+				title="Users (24hr)"
+				value={eventsStats.uniqueUsers}
 				change={diffStats.percentChange.uniqueUsers}
+				footerText=""
 			/>
 		</div>
 	);
