@@ -115,3 +115,30 @@ export const getEventsLast24HoursWithComparison = async () => {
 		},
 	};
 };
+
+export const getEventsTimeSeries = async (days: number = 90) => {
+	const endDate = new Date();
+	const startDate = new Date();
+	startDate.setDate(endDate.getDate() - days);
+
+	const result = await db
+		.select({
+			date: sql<string>`DATE(${events.occurredAt})`,
+			low: sql<number>`count(*) filter (where ${events.severity} = 'low')`,
+			medium: sql<number>`count(*) filter (where ${events.severity} = 'medium')`,
+			high: sql<number>`count(*) filter (where ${events.severity} = 'high')`,
+			critical: sql<number>`count(*) filter (where ${events.severity} = 'critical')`,
+		})
+		.from(events)
+		.where(gte(events.occurredAt, startDate))
+		.groupBy(sql`DATE(${events.occurredAt})`)
+		.orderBy(sql`DATE(${events.occurredAt})`);
+
+	return result.map((row) => ({
+		date: row.date,
+		low: Number(row.low),
+		medium: Number(row.medium),
+		high: Number(row.high),
+		critical: Number(row.critical),
+	}));
+};

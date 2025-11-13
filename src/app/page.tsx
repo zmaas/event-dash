@@ -1,17 +1,18 @@
 import { ChartAreaInteractive } from "~/components/chart-area-interactive";
 import { DataTable } from "~/components/data-table";
 import { SectionCards } from "~/components/section-cards";
+import { getRecentEvents } from "~/server/db/queries";
 
-import data from "~/app/data.json";
+export default async function Page() {
+	const events = await getRecentEvents(100);
 
-export default function Page() {
 	return (
 		<div className="space-y-4">
 			<SectionCards />
 			<div className="px-4 lg:px-6">
 				<ChartAreaInteractive />
 			</div>
-			<DataTable data={data} />
+			<DataTable data={events} />
 		</div>
 	);
 }
