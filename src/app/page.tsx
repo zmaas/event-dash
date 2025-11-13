@@ -3,6 +3,8 @@ import { DataTable } from "~/components/data-table";
 import { SectionCards } from "~/components/section-cards";
 import { getRecentEvents } from "~/server/db/queries";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
 	const events = await getRecentEvents(100);
 

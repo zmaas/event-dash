@@ -1,9 +1,14 @@
 import { DataTable } from "~/components/data-table";
 import { getRecentEvents } from "~/server/db/queries";
 
-export default async function EventsPage() {
-	const events = await getRecentEvents(1000);
+export const dynamic = "force-dynamic";
 
+async function DataTableServer() {
+	const events = await getRecentEvents(1000);
+	return <DataTable data={events} />;
+}
+
+export default async function EventsPage() {
 	return (
 		<div className="space-y-4">
 			<div className="px-4 lg:px-6">
@@ -13,7 +18,7 @@ export default async function EventsPage() {
 					pagination.
 				</p>
 			</div>
-			<DataTable data={events} />
+			<DataTableServer />
 		</div>
 	);
 }

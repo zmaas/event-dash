@@ -17,6 +17,7 @@
             nodejs 
 	    typescript
 	    pnpm
+	    docker-buildx
           ];
 
           # Environment variables if needed

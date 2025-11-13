@@ -1,3 +1,4 @@
+"use server";
 import { desc, sql, and, gte, lt, count } from "drizzle-orm";
 import { db } from "~/server/db/index";
 import { events } from "~/server/db/schema";
