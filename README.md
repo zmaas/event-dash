@@ -9,6 +9,7 @@ Small demo full-stack app using TypeScript + Golang
 - Auth using BetterAuth with admin roles + passkeys implemented
 - Drizzle ORM for frontend, Golang PGX for ingestion
 - Schema representing synthetic logging events
+- Modular frontend using shadcn/ui
 
 ## Available for deployment
 
