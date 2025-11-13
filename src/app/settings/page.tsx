@@ -16,7 +16,7 @@ import { IconFingerprint, IconTrash } from "@tabler/icons-react";
 import type { Passkey } from "better-auth/plugins/passkey";
 
 export default function SettingsPage() {
-	const { isAuthenticated, isPending } = useSession();
+	const { isAuthenticated, isPending, session } = useSession();
 	const [passkeys, setPasskeys] = useState<Passkey[]>([]);
 	const [isLoadingPasskeys, setIsLoadingPasskeys] = useState(false);
 
@@ -88,11 +88,13 @@ export default function SettingsPage() {
 			<h1 className="text-2xl font-bold">Settings</h1>
 			{isAuthenticated ? (
 				<div className="space-y-6">
-					<div className="flex gap-4">
-						<Button onClick={() => seed()} className="hover:cursor-pointer">
-							Populate Database
-						</Button>
-					</div>
+					{session?.user?.role === "admin" && (
+						<div className="flex gap-4">
+							<Button onClick={() => seed()} className="hover:cursor-pointer">
+								Populate Database
+							</Button>
+						</div>
+					)}
 
 					<Card>
 						<CardHeader>

@@ -65,7 +65,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						>
 							<a href="/">
 								<span className="text-base font-semibold">
-									Analytics Dashboard Demo
+									Ingestion Pipeline Dashboard
 								</span>
 							</a>
 						</SidebarMenuButton>
