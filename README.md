@@ -11,12 +11,11 @@
 ### UI
 
 - [x] Minimal UI with ShadCN
-- [ ] Schema setup
-- [ ] Insert synthetic data
+- [x] Schema setup
+- [x] Insert synthetic data
 - [ ] Have frontend pull from DB
-- [ ]
-- [ ]
-- [ ]
+- [ ] Fix navigation bug
+- [ ] Add auth?
 
 ### Ingestion Engine
 

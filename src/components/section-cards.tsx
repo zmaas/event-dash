@@ -1,4 +1,5 @@
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { useMemo } from "react";
 
 import { Badge } from "~/components/ui/badge";
 import {
@@ -10,7 +11,13 @@ import {
 	CardTitle,
 } from "~/components/ui/card";
 
+import {
+	getEventsLast24Hours,
+	getEventsLast24HoursWithComparison,
+} from "~/server/db/queries";
+
 const TrendIndicator = ({ percentage }: { percentage: number }) => {
+	percentage = percentage.toFixed(1) as unknown as number;
 	if (percentage >= 0) {
 		return (
 			<Badge variant="outline">
@@ -27,16 +34,16 @@ const TrendIndicator = ({ percentage }: { percentage: number }) => {
 	}
 };
 
-const EventsCard = () => {
+const EventsCard = (props: { events: number; change: number }) => {
 	return (
 		<Card className="@container/card">
 			<CardHeader>
 				<CardDescription>Events (24hr)</CardDescription>
 				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					5329
+					{props.events}
 				</CardTitle>
 				<CardAction>
-					<TrendIndicator percentage={12} />
+					<TrendIndicator percentage={props.change} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -46,16 +53,16 @@ const EventsCard = () => {
 	);
 };
 
-const ErrorsCard = () => {
+const ErrorsCard = (props: { errors: number; change: number }) => {
 	return (
 		<Card className="@container/card">
 			<CardHeader>
 				<CardDescription>Errors (24hr)</CardDescription>
 				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					5329
+					{props.errors}
 				</CardTitle>
 				<CardAction>
-					<TrendIndicator percentage={-8} />
+					<TrendIndicator percentage={props.change} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -65,16 +72,16 @@ const ErrorsCard = () => {
 	);
 };
 
-const WarningsCard = () => {
+const WarningsCard = (props: { warnings: number; change: number }) => {
 	return (
 		<Card className="@container/card">
 			<CardHeader>
 				<CardDescription>Warnings (24hr)</CardDescription>
 				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					5329
+					{props.warnings}
 				</CardTitle>
 				<CardAction>
-					<TrendIndicator percentage={-20} />
+					<TrendIndicator percentage={props.change} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -84,16 +91,16 @@ const WarningsCard = () => {
 	);
 };
 
-const AnomaliesCard = () => {
+const UsersCard = (props: { users: number; change: number }) => {
 	return (
 		<Card className="@container/card">
 			<CardHeader>
-				<CardDescription>Anomalies (24hr)</CardDescription>
+				<CardDescription>Users (24hr)</CardDescription>
 				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-					5329
+					{props.users}
 				</CardTitle>
 				<CardAction>
-					<TrendIndicator percentage={5} />
+					<TrendIndicator percentage={props.change} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -103,13 +110,27 @@ const AnomaliesCard = () => {
 	);
 };
 
-export function SectionCards() {
+export async function SectionCards() {
+	const eventsStats = await getEventsLast24Hours();
+	const diffStats = await getEventsLast24HoursWithComparison();
 	return (
 		<div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-			<EventsCard />
-			<WarningsCard />
-			<ErrorsCard />
-			<AnomaliesCard />
+			<EventsCard
+				events={eventsStats.totalEvents}
+				change={diffStats.percentChange.totalEvents}
+			/>
+			<WarningsCard
+				warnings={eventsStats.warnings}
+				change={diffStats.percentChange.warnings}
+			/>
+			<ErrorsCard
+				errors={eventsStats.errors}
+				change={diffStats.percentChange.errors}
+			/>
+			<UsersCard
+				users={eventsStats.uniqueUsers}
+				change={diffStats.percentChange.uniqueUsers}
+			/>
 		</div>
 	);
 }

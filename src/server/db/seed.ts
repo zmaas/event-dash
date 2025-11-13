@@ -84,7 +84,7 @@ export async function seed() {
 	console.log("🌱 Seeding events table...");
 
 	const count = 1000; // adjust as needed
-	const batchSize = 100;
+	const batchSize = 1000;
 
 	for (let i = 0; i < count; i += batchSize) {
 		const batch = Array.from({ length: Math.min(batchSize, count - i) }, () => {
