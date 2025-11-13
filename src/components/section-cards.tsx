@@ -10,6 +10,23 @@ import {
 	CardTitle,
 } from "~/components/ui/card";
 
+const TrendIndicator = ({ percentage }: { percentage: number }) => {
+	if (percentage >= 0) {
+		return (
+			<Badge variant="outline">
+				<IconTrendingUp />+{percentage}%
+			</Badge>
+		);
+	} else {
+		return (
+			<Badge variant="outline">
+				<IconTrendingDown />
+				{percentage}%
+			</Badge>
+		);
+	}
+};
+
 const EventsCard = () => {
 	return (
 		<Card className="@container/card">
@@ -19,14 +36,30 @@ const EventsCard = () => {
 					5329
 				</CardTitle>
 				<CardAction>
-					<Badge variant="outline">
-						<IconTrendingDown />
-						-20%
-					</Badge>
+					<TrendIndicator percentage={12} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
 				<div className="text-muted-foreground">From X unique users</div>
+			</CardFooter>
+		</Card>
+	);
+};
+
+const ErrorsCard = () => {
+	return (
+		<Card className="@container/card">
+			<CardHeader>
+				<CardDescription>Errors (24hr)</CardDescription>
+				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+					5329
+				</CardTitle>
+				<CardAction>
+					<TrendIndicator percentage={-8} />
+				</CardAction>
+			</CardHeader>
+			<CardFooter className="flex-col items-start gap-1.5 text-sm">
+				<div className="text-muted-foreground">From X unique endpoints</div>
 			</CardFooter>
 		</Card>
 	);
@@ -41,10 +74,26 @@ const WarningsCard = () => {
 					5329
 				</CardTitle>
 				<CardAction>
-					<Badge variant="outline">
-						<IconTrendingDown />
-						-20%
-					</Badge>
+					<TrendIndicator percentage={-20} />
+				</CardAction>
+			</CardHeader>
+			<CardFooter className="flex-col items-start gap-1.5 text-sm">
+				<div className="text-muted-foreground">From X unique endpoints</div>
+			</CardFooter>
+		</Card>
+	);
+};
+
+const AnomaliesCard = () => {
+	return (
+		<Card className="@container/card">
+			<CardHeader>
+				<CardDescription>Anomalies (24hr)</CardDescription>
+				<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+					5329
+				</CardTitle>
+				<CardAction>
+					<TrendIndicator percentage={5} />
 				</CardAction>
 			</CardHeader>
 			<CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -59,46 +108,8 @@ export function SectionCards() {
 		<div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
 			<EventsCard />
 			<WarningsCard />
-			<Card className="@container/card">
-				<CardHeader>
-					<CardDescription>Active Accounts</CardDescription>
-					<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-						45,678
-					</CardTitle>
-					<CardAction>
-						<Badge variant="outline">
-							<IconTrendingUp />
-							+12.5%
-						</Badge>
-					</CardAction>
-				</CardHeader>
-				<CardFooter className="flex-col items-start gap-1.5 text-sm">
-					<div className="line-clamp-1 flex gap-2 font-medium">
-						Strong user retention <IconTrendingUp className="size-4" />
-					</div>
-					<div className="text-muted-foreground">Engagement exceed targets</div>
-				</CardFooter>
-			</Card>
-			<Card className="@container/card">
-				<CardHeader>
-					<CardDescription>Growth Rate</CardDescription>
-					<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-						4.5%
-					</CardTitle>
-					<CardAction>
-						<Badge variant="outline">
-							<IconTrendingUp />
-							+4.5%
-						</Badge>
-					</CardAction>
-				</CardHeader>
-				<CardFooter className="flex-col items-start gap-1.5 text-sm">
-					<div className="line-clamp-1 flex gap-2 font-medium">
-						Steady performance increase <IconTrendingUp className="size-4" />
-					</div>
-					<div className="text-muted-foreground">Meets growth projections</div>
-				</CardFooter>
-			</Card>
+			<ErrorsCard />
+			<AnomaliesCard />
 		</div>
 	);
 }

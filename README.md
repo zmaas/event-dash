@@ -8,15 +8,20 @@
 
 ## TODO
 
-- [ ] Minimal UI with ShadCN
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
+### UI
+
+- [x] Minimal UI with ShadCN
+- [ ] Schema setup
+- [ ] Insert synthetic data
+- [ ] Have frontend pull from DB
+- [ ]
+- [ ]
+- [ ]
+
+### Ingestion Engine
+
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
